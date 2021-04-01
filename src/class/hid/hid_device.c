@@ -57,14 +57,18 @@ typedef struct
 CFG_TUSB_MEM_SECTION static hidd_interface_t _hidd_itf[CFG_TUD_HID];
 
 /*------------- Helpers -------------*/
-static inline uint8_t get_index_by_itfnum(uint8_t itf_num)
-{
-	for (uint8_t i=0; i < CFG_TUD_HID; i++ )
-	{
-		if ( itf_num == _hidd_itf[i].itf_num ) return i;
-	}
+uint8_t tud_hid_itf_num_to_index(uint8_t itf_num) {
+  for ( uint8_t i=0; i < CFG_TUD_HID; i++ ) {
+    if ( itf_num == _hidd_itf[i].itf_num ) return i;
+  }
+  return 0xFF;
+}
 
-	return 0xFF;
+uint8_t tud_hid_itf_index_to_num(uint8_t itf) {
+  if (itf < CFG_TUD_HID) {
+    return _hidd_itf[itf].itf_num;
+  }
+  return 0xFF;
 }
 
 //--------------------------------------------------------------------+
@@ -218,7 +222,7 @@ bool hidd_control_xfer_cb (uint8_t rhport, uint8_t stage, tusb_control_request_t
 {
   TU_VERIFY(request->bmRequestType_bit.recipient == TUSB_REQ_RCPT_INTERFACE);
 
-  uint8_t const hid_itf = get_index_by_itfnum((uint8_t) request->wIndex);
+  uint8_t const hid_itf = tud_hid_itf_num_to_index((uint8_t) request->wIndex);
   TU_VERIFY(hid_itf < CFG_TUD_HID);
 
   hidd_interface_t* p_hid = &_hidd_itf[hid_itf];

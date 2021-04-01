@@ -54,6 +54,13 @@
 // CFG_TUD_HID > 1
 //--------------------------------------------------------------------+
 
+// Returns up the hid index to use with tud_hid_n* functions
+// for the given hid interface number
+uint8_t tud_hid_itf_num_to_index(uint8_t itf_num);
+
+// Returns up the hid interface number for the given hid index
+uint8_t tud_hid_itf_index_to_num(uint8_t itf);
+
 // Check if the interface is ready to use
 bool tud_hid_n_ready(uint8_t itf);
 
